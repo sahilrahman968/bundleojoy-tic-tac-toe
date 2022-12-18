@@ -1,0 +1,11 @@
+.disabled{
+ background: gray
+}
+
+.not-disabled{
+ background: green
+}
+
+.button{
+ cursor: pointer;
+}

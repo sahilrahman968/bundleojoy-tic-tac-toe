@@ -1,25 +1,44 @@
-import logo from './logo.svg';
 import './App.css';
+import { Routes,Route } from 'react-router-dom'
+import React from 'react';
+
+const LazyBoard = React.lazy(() => import('./component/board/Board'))
+const LazyHome = React.lazy(() => import('./component/home/Home'))
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        display: 'flex',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <React.Suspense fallback={<Loading />}>
+              <LazyHome />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path='/game'
+          element={
+            <React.Suspense fallback={<Loading />}>
+              <LazyBoard />
+            </React.Suspense>
+          }
+        />
+      </Routes>
     </div>
-  );
+  )
+}
+
+function Loading(){
+  return <h1 style={{padding:"20px",fontSize:"74px",background:"white"}}>LOADING..</h1>
 }
 
 export default App;
