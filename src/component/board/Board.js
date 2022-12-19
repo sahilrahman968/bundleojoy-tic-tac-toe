@@ -4,11 +4,7 @@ import {useNavigate, useLocation} from "react-router-dom"
 import Square from '../square/Square'
 import "./Board.css"
 
-const gameDetails = JSON.parse(sessionStorage.getItem('gameDetails'))
-const number = Number(JSON.parse(sessionStorage.getItem('number'))) 
-
 const initialState = {
-  // grid: generateGrid(Number(number), () => ''),
   possibleWin: generatePossibleWin(),
   gameState: {
     turn: '1',
@@ -45,64 +41,57 @@ const reducer = (state,action) => {
 
 function Board() {
   const location = useLocation()
-  const { number } = location.state 
-  const [state, dispatch] = useReducer(reducer,initialState)
-  const {/* grid */gameState,possibleWin,end} = state
-  const [grid , setGrid] = useState([])
+  const { number, player1, player2 } = location.state
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const { /* grid */ gameState, possibleWin, end } = state
+  const [grid, setGrid] = useState([])
   const totalTurnRef = useRef()
   const navigate = useNavigate()
-  const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
-  useEffect(()=>{
-   totalTurnRef.current = 0;
-  //  dispatch({
-  //    type: 'gridUpdate',
-  //    payload: generateGrid(Number(gameDetails.number), () => ''),
-  //  })
-   setGrid(generateGrid(Number(number), () => ''))
-   forceUpdate()
-  },[])
+  useEffect(() => {
+    totalTurnRef.current = 0
+    setGrid(generateGrid(Number(number), () => ''))
+  }, [])
 
   const clickHandler = (e) => {
-   let X_coordinate = Number(e.target.id.split("")[0])
-   let Y_coordinate = Number(e.target.id.split('')[1])
-   const gridClone = JSON.parse(JSON.stringify(grid))
+    let X_coordinate = Number(e.target.id.split('')[0])
+    let Y_coordinate = Number(e.target.id.split('')[1])
+    const gridClone = JSON.parse(JSON.stringify(grid))
 
-   if(!e.target.innerText.length){ 
-     totalTurnRef.current+=1
-     let gameStateClone = JSON.parse(JSON.stringify(gameState))
-     if(gameState?.turn === "1"){
+    if (!e.target.innerText.length) {
+      totalTurnRef.current += 1
+      let gameStateClone = JSON.parse(JSON.stringify(gameState))
+      if (gameState?.turn === '1') {
         gameStateClone.player1.push(e.target.id)
-        gameStateClone.turn = "2"
-        gridClone[X_coordinate][Y_coordinate] = "❌"
-     }
-     else{
+        gameStateClone.turn = '2'
+        gridClone[X_coordinate][Y_coordinate] = '❌'
+      } else {
         gameStateClone.player2.push(e.target.id)
-        gameStateClone.turn = "1"
+        gameStateClone.turn = '1'
         gridClone[X_coordinate][Y_coordinate] = '⭕'
       }
-    //  dispatch({ type: 'gridUpdate', payload: gridClone }) 
-     setGrid([...gridClone])
-     dispatch({ type: 'click', payload: gameStateClone }) 
+      //  dispatch({ type: 'gridUpdate', payload: gridClone })
+      setGrid([...gridClone])
+      dispatch({ type: 'click', payload: gameStateClone })
     }
   }
 
-  useEffect(()=>{
-   if (
-     gameState?.player1?.length >= Number(number) ||
-     gameState?.player2?.length >= Number(number)
-   ) {
-     const result = WinningLogic(
-       possibleWin,
-       gameState,
-       totalTurnRef.current,
-       number
-     )
-     if (result) {
-       dispatch({ type: 'gameOverCheck', payload: result })
-     }
-   }
-  },[gameState])
+  useEffect(() => {
+    if (
+      gameState?.player1?.length >= Number(number) ||
+      gameState?.player2?.length >= Number(number)
+    ) {
+      const result = WinningLogic(
+        possibleWin,
+        gameState,
+        totalTurnRef.current,
+        number
+      )
+      if (result) {
+        dispatch({ type: 'gameOverCheck', payload: result })
+      }
+    }
+  }, [gameState])
 
   return (
     <div className='m-s' style={{ marginTop: '100px' }}>
@@ -126,15 +115,6 @@ function Board() {
               onClick={() => {
                 navigate('/')
                 dispatch({ type: 'reset' })
-                
-                sessionStorage.setItem(
-              'gameDetails',
-              JSON.stringify({
-                number: 0,
-                player1: "",
-                player2: "",
-              }))
-
                 totalTurnRef.current = 0
               }}
               className='button-span'
@@ -166,10 +146,8 @@ function Board() {
             )
           })}
           <h3>Next up, </h3>
-          <h2 style={{color:"red"}}>
-            {gameState?.turn === '1'
-              ? gameDetails?.player1
-              : gameDetails?.player2}
+          <h2 style={{ color: 'red' }}>
+            {gameState?.turn === '1' ? player1 : player2}
           </h2>
         </div>
       )}

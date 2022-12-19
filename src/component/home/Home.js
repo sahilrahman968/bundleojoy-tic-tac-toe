@@ -38,7 +38,6 @@ function Home() {
  const gridInputHandler = (e) => {
     if(e.keyCode === 13 && Number(e.target.value)>2){
       setGridNumber(e.target.value)
-      sessionStorage.setItem('number', e.target.value)
     }
  }
  
@@ -113,14 +112,13 @@ function Home() {
               : true
           }
           onClick={() => {
-            navigate('/game', { state: { number: gridNumber } })
-            sessionStorage.setItem(
-              'gameDetails',
-              JSON.stringify({
+            navigate('/game', {
+              state: {
+                number: gridNumber,
                 player1: playerNames?.player1,
                 player2: playerNames?.player2,
-              })
-            )
+              },
+            })
           }}
           style={{
             margin: '20px 0px',
