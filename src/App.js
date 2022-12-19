@@ -38,7 +38,7 @@ function App() {
 }
 
 function Loading(){
-  return <h1 style={{padding:"20px",fontSize:"74px",background:"white"}}>LOADING..</h1>
+  return <h1 className="loading">LOADING..</h1>
 }
 
 export default App;

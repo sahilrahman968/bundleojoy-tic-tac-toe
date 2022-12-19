@@ -5,7 +5,6 @@ import Square from '../square/Square'
 import "./Board.css"
 
 const initialState = {
-  possibleWin: generatePossibleWin(),
   gameState: {
     turn: '1',
     player1: [],
@@ -43,8 +42,9 @@ function Board() {
   const location = useLocation()
   const { number, player1, player2 } = location.state
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { /* grid */ gameState, possibleWin, end } = state
+  const { gameState, end } = state
   const [grid, setGrid] = useState([])
+  const [possibleWin, setPossibleWin] = useState(generatePossibleWin(number))
   const totalTurnRef = useRef()
   const navigate = useNavigate()
 
@@ -70,7 +70,7 @@ function Board() {
         gameStateClone.turn = '1'
         gridClone[X_coordinate][Y_coordinate] = '⭕'
       }
-      //  dispatch({ type: 'gridUpdate', payload: gridClone })
+
       setGrid([...gridClone])
       dispatch({ type: 'click', payload: gameStateClone })
     }
@@ -85,7 +85,9 @@ function Board() {
         possibleWin,
         gameState,
         totalTurnRef.current,
-        number
+        number,
+        player1,
+        player2
       )
       if (result) {
         dispatch({ type: 'gameOverCheck', payload: result })

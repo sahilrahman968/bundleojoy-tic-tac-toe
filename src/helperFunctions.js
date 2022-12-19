@@ -1,13 +1,10 @@
-const gameDetails = JSON.parse(sessionStorage.getItem("gameDetails"))
-const number = Number(JSON.parse(sessionStorage.getItem('number'))) 
-
 export function generateGrid(num,mapper) {
   return Array(num)
     .fill()
     .map(() => Array(num).fill().map(mapper))
 }
 
-export function generatePossibleWin(){
+export function generatePossibleWin(number){
     let possibleWin = []
     let rowWins = []
     let columnWins = []
@@ -67,32 +64,42 @@ export function generatePossibleWin(){
 }
 
 
-export const WinningLogic = (possibleWin, gameState,totalTurn,number) => {
+export const WinningLogic = (
+  possibleWin,
+  gameState,
+  totalTurn,
+  number,
+  player1,
+  player2
+) => {
   let winner
   for (let i = 0; i < possibleWin.length; i++) {
-    if(isSubset(
-       gameState?.player1,
-       possibleWin[i],
-       gameState?.player1.length,
-       possibleWin[i].length,
-     )){
-        winner = gameDetails?.player1 + ' won! ';
-        break; 
-      }
-    else if(isSubset(
+    if (
+      isSubset(
+        gameState?.player1,
+        possibleWin[i],
+        gameState?.player1.length,
+        possibleWin[i].length
+      )
+    ) {
+      winner = player1 + ' won! '
+      break
+    } else if (
+      isSubset(
         gameState?.player2,
         possibleWin[i],
         gameState?.player2.length,
-        possibleWin[i].length,
-      )){
-        winner = gameDetails?.player2 + ' won! ';
-        break; 
-      }  
+        possibleWin[i].length
+      )
+    ) {
+      winner = player2 + ' won! '
+      break
+    }
   }
   if (winner) {
     return winner
   } else if (totalTurn === number * number) {
-      return "Match Drawn!"
+    return 'Match Drawn!'
   }
 }
 
